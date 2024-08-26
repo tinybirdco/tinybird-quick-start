@@ -1,0 +1,13 @@
+TOKEN "chart_read_token" READ
+
+NODE endpoint
+SQL >
+
+    %
+    SELECT DISTINCT orders.order, first_name, count(*) AS count
+    FROM orders
+    WHERE first_name = {{ String(name, 'April') }}
+    GROUP BY order, first_name
+    ORDER BY count DESC
+
+

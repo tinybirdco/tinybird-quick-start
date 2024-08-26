@@ -1,0 +1,28 @@
+TOKEN "chart_read_token" READ
+
+NODE spend_and_progress
+SQL >
+
+    %
+    SELECT
+        first_name AS name,
+        round(sum(cost), 2) AS total_spend,
+        round(total_spend - floor(total_spend, -2), 2) AS current_progress,
+        100 - current_progress AS remaining_spend
+    FROM orders
+    WHERE used_rewards = 0 AND name = {{ String(name, 'April') }}
+    GROUP BY name
+
+
+
+NODE endpoint
+SQL >
+
+    SELECT name, 'current_progress' AS type, current_progress AS value
+    FROM spend_and_progress
+    UNION ALL
+    SELECT name, 'remaining' AS type, remaining_spend AS value
+    FROM spend_and_progress
+    ORDER BY type
+
+

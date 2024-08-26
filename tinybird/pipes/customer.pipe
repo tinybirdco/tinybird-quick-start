@@ -1,0 +1,17 @@
+TOKEN "chart_read_token" READ
+
+NODE endpoint
+SQL >
+
+    %
+    SELECT
+        first_name AS name,
+        date(min(date)) AS member_since,
+        concat('$ ', round(sum(CASE WHEN used_rewards = 1 THEN cost else 0 END), 2)) AS rewards_value,
+        sum(used_rewards) AS total_rewards
+    FROM orders
+    {% if defined(name) %} WHERE name = {{ String(name) }} {% end %}
+    GROUP BY name
+    ORDER BY name
+
+

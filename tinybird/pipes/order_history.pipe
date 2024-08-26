@@ -1,0 +1,19 @@
+TOKEN "chart_read_token" READ
+
+NODE endpoint
+SQL >
+
+    %
+    SELECT
+        toDate(date) AS date,
+        order,
+        cost AS cost_value,
+        concat('$ ', roundBankers(cost, 2)) AS total,
+        used_rewards,
+        online_order
+    FROM orders
+    WHERE first_name = {{ String(name, 'April') }}
+    ORDER BY date DESC
+    LIMIT {{ Int8(limit, 20) }}
+
+
